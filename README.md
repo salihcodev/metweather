@@ -11,7 +11,7 @@ Weather app built on top of [Open-Meteo](https://open-meteo.com/en/docs) APIs
 
 ## Preview
 
-<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="100%" height="100%" />
+<video src="https://github.com/salihcodev/weather-app/blob/develop/src/assets/preview.mp4?raw=true" autoplay width="100%" hight="100%"></video>
 
 </br>
 
