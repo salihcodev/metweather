@@ -4,6 +4,7 @@
 // utils:
 @import './utils/_colors.util.sass'
 @import './utils/_fonts.util.sass'
+@import './utils/_animation.util'
 
 // globals:
 *
@@ -21,6 +22,22 @@
         outline-color: $app_sudo_clr-dg1
 button
     cursor: pointer
+
+.loading-wrapper
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 5rem
+    span.spinner
+        display: block
+        width: 2rem
+        height: 2rem
+        border-radius: 50%
+        border: 3px solid transparent
+        border-color: $extra_gray_1
+        border-top-color: $app_sudo_clr
+        border-left-color: $app_sudo_clr
+        @include mx_spinner($t: 0.3s)
 
 p
     padding: 0

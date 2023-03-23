@@ -1,0 +1,12 @@
+// COMPS ANIMATION:
+
+// animations
+@mixin mx_spinner($t)
+    animation: spinning linear $t infinite
+
+// keys
+@keyframes spinning
+    0%
+        transform: rotate(0deg)
+    100%
+        transform: rotate(360deg)

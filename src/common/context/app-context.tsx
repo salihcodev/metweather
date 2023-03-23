@@ -26,6 +26,8 @@ const AppProvider: FC<any> = ({ children }) => {
   };
 
   const [formData, setFormData] = useState<any>([]);
+  const [citiesSearchLoading, setCitiesSearchLoading] = useState<`idle` | `busy`>(`idle`);
+  const [getCitiesInfoLoading, setGetCitiesInfoLoading] = useState<`idle` | `busy`>(`idle`);
   const [searchOptions, setSearchOptions] = useState<any>({
     temperature: true,
     humidity: true,
@@ -50,56 +52,78 @@ const AppProvider: FC<any> = ({ children }) => {
 
   // SEARCH IN CITIES VIA SEARCH_CRITERIA:
   const handleSearchInCities = async (value: any, setCitiesMatchesSearch: any) => {
+    setCitiesSearchLoading(`busy`);
+
     const {
       status,
       data: { results },
     } = await axios.get(`${SEARCH_ENDPOINT}?name=${value}`);
 
     setCitiesMatchesSearch(results);
+    setCitiesSearchLoading(`idle`);
   };
 
   // GET CITY INFO:
   const getCityInfoOnPick = async (formRow: any) => {
-    const h = searchOptions.humidity ? `relativehumidity_2m` : ``;
+    setGetCitiesInfoLoading(`busy`);
+    const humidity = searchOptions.humidity ? `relativehumidity_2m` : ``;
+    const lati = formRow.coordinates.latitude;
+    const long = formRow.coordinates.longitude;
+    try {
+      const URI = `${RETRIEVE_INFO_ENDPOINT}?latitude=${lati}&longitude=${long}&hourly=temperature_2m,${humidity}&start_date=${formRow.dateRange.startDate}&end_date=${formRow.dateRange.endDate}`;
 
-    const URI = `${RETRIEVE_INFO_ENDPOINT}?latitude=${formRow?.coordinates.latitude}&longitude=${formRow?.coordinates.longitude}&hourly=temperature_2m,${h}&start_date=${formRow.dateRange.startDate}&end_date=${formRow.dateRange.endDate}`;
+      let data;
+      if (lati && long) {
+        const { status, data: _data } = await axios.get(URI);
+        data = _data;
+      }
 
-    const { status, data } = await axios.get(URI);
+      let store: any = [];
+      for (let i in data?.hourly.time) {
+        const time = data?.hourly.time[i];
 
-    let store: any = [];
-    for (let i in data?.hourly.time) {
-      const time = data?.hourly.time[i];
+        let temperature;
+        if (data?.hourly.temperature_2m !== undefined) temperature = data?.hourly.temperature_2m[i];
 
-      let temperature;
-      if (data?.hourly.temperature_2m !== undefined) temperature = data?.hourly.temperature_2m[i];
+        let humidity;
+        if (data?.hourly.relativehumidity_2m !== undefined)
+          humidity = data?.hourly.relativehumidity_2m[i];
 
-      let humidity;
-      if (data?.hourly.relativehumidity_2m !== undefined) humidity = data?.hourly.relativehumidity_2m[i];
+        const toInject: any = {
+          time: new Date(time).toDateString(),
+          temperature: temperature || null,
+          humidity: humidity || null,
+        };
+        store.push(toInject);
+      }
 
-      const toInject: any = {
-        time: new Date(time).toDateString(),
-        temperature: temperature || null,
-        humidity: humidity || null,
+      // Build final row
+      const currentRowInfo = {
+        ...formRow,
+        cityName: formRow?.cityName,
+        coordinates: {
+          latitude: data?.latitude,
+          longitude: data?.longitude,
+        },
+        hourly_units: data?.hourly_units || null,
+        data: store,
       };
-      store.push(toInject);
-    }
 
-    // Build final row
-    const currentRowInfo = {
-      ...formRow,
-      cityName: formRow?.cityName,
-      coordinates: {
-        latitude: data?.latitude,
-        longitude: data?.longitude,
+      // Update that row even if it's not the current row, No matter where is it
+      const updatedVersionFromRow = formData.map((row: any) =>
+        row.id === formRow.id ? (row = currentRowInfo) : row,
+      );
+
+      setFormData(updatedVersionFromRow);
+      setGetCitiesInfoLoading(`idle`);
+    } catch ({
+      message,
+      response: {
+        data: { reason },
       },
-      hourly_units: data?.hourly_units || null,
-      data: store,
-    };
-
-    // Update that row even if it's not the current row, No matter where is it
-    const updatedVersionFromRow = formData.map((row: any) => (row.id === formRow.id ? (row = currentRowInfo) : row));
-
-    setFormData(updatedVersionFromRow);
+    }) {
+      alert(`${message} ${reason}`);
+    }
   };
 
   return (
@@ -113,6 +137,8 @@ const AppProvider: FC<any> = ({ children }) => {
         searchOptions,
         getCityInfoOnPick,
         initialFormRow,
+        citiesSearchLoading,
+        getCitiesInfoLoading,
       }}
     >
       {children}

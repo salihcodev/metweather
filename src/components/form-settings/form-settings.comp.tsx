@@ -41,6 +41,7 @@ export const FormSettings: FC<{}> = () => {
     };
 
     localStorage.setItem(`searchHistory`, JSON.stringify([..._lastHistory, submission]));
+    alert(`Form data has been saved to local storage.`);
   };
 
   return (
@@ -66,7 +67,9 @@ export const FormSettings: FC<{}> = () => {
             type="checkbox"
             id="humidity"
             name="humidity"
-            onClick={(e) => setSearchOptions({ ...searchOptions, humidity: e.currentTarget.checked })}
+            onClick={(e) =>
+              setSearchOptions({ ...searchOptions, humidity: e.currentTarget.checked })
+            }
             checked={searchOptions?.humidity}
           />
           <button className="alt-check">

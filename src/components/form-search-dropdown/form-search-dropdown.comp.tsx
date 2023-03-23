@@ -2,6 +2,7 @@
 import { FC, useContext, useState } from 'react';
 import Flag from 'react-world-flags';
 import { CitiesSearchListItemType } from '../../common/@types/cities-search-list-item.type';
+import { AppContext } from '../../common/context/app-context';
 import IFormSearchDropdown from '../../common/interfaces/form-search-dropdown.interface';
 
 // utils:
@@ -12,6 +13,8 @@ import './style.sass';
 // component>>>
 export const FormSearchDropdown: FC<IFormSearchDropdown> = ({ citiesMatchesSearch, setFormRow, formRow, pickCity }) => {
   const [showResList, setShowResList] = useState<boolean>(true);
+
+  const { citiesSearchLoading } = useContext(AppContext);
 
   return (
     <div className="searching-in-cities">
@@ -33,23 +36,29 @@ export const FormSearchDropdown: FC<IFormSearchDropdown> = ({ citiesMatchesSearc
       </div>
       {citiesMatchesSearch?.length > 0 && showResList ? (
         <div className="list-wrapper">
-          <ul className="results-list">
-            {citiesMatchesSearch?.map((city: CitiesSearchListItemType) => {
-              return (
-                <li key={city?.id} onClick={() => pickCity(city)}>
-                  <div className="icon">
-                    <Flag code={city?.country_code} />
-                  </div>
-                  <div className="info">
-                    <p>{city?.name}</p>
-                    <small>
-                      {city?.timezone} — {city?.latitude} : {city?.longitude}
-                    </small>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          {citiesSearchLoading === `idle` ? (
+            <ul className="results-list">
+              {citiesMatchesSearch?.map((city: CitiesSearchListItemType) => {
+                return (
+                  <li key={city?.id} onClick={() => pickCity(city)}>
+                    <div className="icon">
+                      <Flag code={city?.country_code} />
+                    </div>
+                    <div className="info">
+                      <p>{city?.name}</p>
+                      <small>
+                        {city?.timezone} — {city?.latitude} : {city?.longitude}
+                      </small>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <div className="loading-wrapper">
+              <span className="spinner"></span>
+            </div>
+          )}
         </div>
       ) : null}
     </div>
