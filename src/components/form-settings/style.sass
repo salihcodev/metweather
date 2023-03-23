@@ -1,0 +1,57 @@
+@import '../../common/style/utils/_colors.util.sass'
+header.settings-header
+    margin-top: 2rem
+    display: flex
+    justify-content: space-between
+    .wing
+        &.settings
+            > div
+                display: flex
+                align-items: center
+            label
+                cursor: pointer
+            input
+                opacity: 0
+                z-index: 5
+                position: absolute
+                &:checked
+                    + button.alt-check
+                        span
+                            display: block !important
+            button.alt-check
+                margin-right: 0.5rem
+                background: $main_white
+                border: none
+                width: 1rem
+                height: 1rem
+                border: 2px solid $alt_black_2
+                position: relative
+                span
+                    background: url("../../assets/check.svg") center/contain no-repeat
+                    position: absolute
+                    display: none
+                    width: 1.5rem
+                    height: 2rem
+                    top: -13px
+                    left: 0px
+
+        &.controllers
+            display: flex
+            align-items: center
+            justify-content: flex-end
+            button
+                border: none
+                background: $app_sudo_clr
+                border-radius: 4px
+                color: $main_white
+                margin: 0 0.2rem
+                &.add-new-row
+                    width: 3rem
+                    height: 2rem
+                    font-size: 1.4rem
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                &.save-current
+                    width: 4rem
+                    height: 2rem

@@ -1,0 +1,112 @@
+@import '../../common/style/utils/_colors.util.sass'
+section.reports-table
+    h2
+        margin: 2rem 0
+        margin-top: 3rem
+    .blank
+        display: flex
+        align-items: center
+        justify-content: flex-start
+    table
+        width: 100%
+        border: 1px solid $extra_gray_1
+        border-radius: 4px
+        width: 70rem
+        border-spacing: 0px
+        padding: 0.5rem
+        thead
+            tr
+                height: 3rem
+        tr
+            height: 4rem
+            &:hover
+                background: $extra_gray_1
+            &.table-header
+                background: $alt_black_1
+                color: $main_white
+        th
+            font-size: 1rem
+        td
+            text-align: center
+            font-size: 0.9rem
+        .select
+            width: 2rem
+            margin: auto
+            position: relative
+            label
+                cursor: pointer
+            input
+                opacity: 0
+                z-index: 5
+                position: absolute
+                width: 100%
+                height: 100%
+                cursor: pointer
+                top: -5px
+                left: -5px
+                &:checked
+                    + button.alt-check
+                        span
+                            display: block !important
+            button.alt-check
+                background: $main_white
+                border: none
+                width: 1.2rem
+                height: 1.2rem
+                border: 1px solid $extra_gray_2
+                position: relative
+                border-radius: 4px
+                span
+                    background: url("../../assets/check.svg") center/contain no-repeat
+                    position: absolute
+                    display: none
+                    width: 1.2rem
+                    height: 1.8rem
+                    top: -9px
+                    left: 1px
+        .controllers
+            button
+                display: inline-flex
+                align-items: center
+                justify-content: center
+                background: none
+                border: none
+                width: 2rem
+                height: 2rem
+                margin: 0.2rem
+                font-size: 1.2rem
+                border-radius: 50%
+                &:focus
+                    // outline: 1px solid $extra_gray_3
+                &.view
+                    &:hover
+                        background: #8eff7f
+                &.delete
+                    &:hover
+                        background: #ff7f7f
+                        color: $main_white
+
+    footer.selection-controllers
+        display: flex
+        align-items: center
+        justify-content: flex-start
+        button
+            height: 2rem
+            border-radius: 4px
+            border: none
+            margin-top: 2rem
+            padding: 0 1rem
+            display: flex
+            align-items: center
+            .icon
+                margin-right: 0.5rem
+                font-size: 1.4rem
+                display: block
+                margin-top: 5px
+            &.delete-multiple
+                color: $main_white
+                background: $app_sudo_clr
+            &.invert-selection
+                margin-left: 1rem
+                background: $extra_gray_1
+                color: $gray_1

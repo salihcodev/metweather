@@ -1,0 +1,53 @@
+@import '../../common/style/utils/_colors.util.sass'
+.searching-in-cities
+    .list-wrapper
+        height: 17rem
+        z-index: 10
+        position: absolute
+        top: 3.5rem
+        right: -0.2rem
+        left: -0.2rem
+        border: 1px solid $extra_gray_2
+        background: $main_white
+        list-style: none
+        border-radius: 4px
+        padding: 0.2rem
+        padding-left: 0
+        display: none
+        ul.results-list
+            height: 100%
+            overflow-y: scroll
+            margin: 0
+            padding: 0
+            padding: 0.5rem
+            &::-webkit-scrollbar
+                width: 0.5rem
+            &::-webkit-scrollbar-track
+                background: $extra_gray_1
+            &::-webkit-scrollbar-thumb
+                background-color: $extra_gray_3
+                border-radius: 1rem
+            &::-webkit-scrollbar-thumb
+                &:hover
+                    background-color: $gray_5
+            li
+                cursor: pointer
+                padding: 0.5rem
+                display: flex
+                align-items: center
+                border-radius: 0.5rem
+                &:hover
+                    background: $app_sudo_clr-dg2
+                .icon
+                    width: 2.4rem
+                    height: 2.4rem
+                    margin-right: 1rem
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                .info
+                    p
+                        margin: 0
+                        padding: 0
+
+                    small

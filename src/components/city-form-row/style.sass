@@ -1,0 +1,62 @@
+@import '../../common/style/utils/_colors.util.sass'
+.city-form-row
+    min-height: 3rem
+    display: grid
+    grid-template-columns: 1fr 1fr 2fr 2fr
+    grid-gap: 1rem
+    margin: 2.5rem 0
+    .input
+        position: relative
+        input
+            height: 3rem
+            width: 100%
+            padding: 0.8rem
+            border-radius: 4px
+            border: 1px solid $extra_gray_2
+            &[type="date"]
+                padding-left: 2.5rem
+                &::-webkit-datetime-edit-month-field,
+                &::-webkit-datetime-edit-day-field,
+                &::-webkit-datetime-edit-year-field
+                    &:focus
+                        color: white
+                        background: $app_sudo_clr
+                &::-webkit-calendar-picker-indicator
+                    font-size: 1.4rem
+                    position: absolute
+                    top: 50%
+                    left: 0.5rem
+                    transform: translate(0, -50%)
+
+    label
+        position: absolute
+        top: -1.7rem
+        font-weight: bold
+    .searching-in-cities
+        position: relative
+        &:after
+            content: ""
+            position: absolute
+            bottom: -1rem
+            left: 0
+            right: 0
+            height: 1rem
+            background: transparent
+        &:hover,
+        &:focus
+            .list-wrapper
+                display: block !important
+    .form-group
+        &.date-range
+            display: grid
+            grid-template-columns: 1fr 1fr
+            grid-gap: 1rem
+
+@media screen and (max-width: 768px)
+    .city-form-row
+        display: block
+        margin-bottom: 4rem
+        &:not(:last-of-type)
+            border-bottom: 1px dashed $extra_gray_3
+        .input
+            margin: 2rem 0
