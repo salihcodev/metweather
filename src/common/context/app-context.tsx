@@ -31,18 +31,21 @@ const AppProvider: FC<any> = ({ children }) => {
     humidity: true,
   });
 
-  // TODO: There's a problem with this logic
   const addNewRow = () => {
-    let okToAdd: boolean = false;
-    for (let i in formData) {
-      if (formData[i].cityName === ``) {
-        okToAdd = false;
-      } else {
-        okToAdd = true;
+    if (formData?.length === 0) {
+      setFormData([initialFormRow]);
+    } else {
+      let okToAdd: boolean = false;
+      for (let i in formData) {
+        if (formData[i].cityName === ``) {
+          okToAdd = false;
+        } else {
+          okToAdd = true;
+        }
       }
+      !okToAdd && alert(`Please, Fill the current row first`);
+      okToAdd && setFormData([...formData, initialFormRow]);
     }
-    !okToAdd && alert(`Please, Fill the current row first`);
-    okToAdd && setFormData([...formData, initialFormRow]);
   };
 
   // SEARCH IN CITIES VIA SEARCH_CRITERIA:
