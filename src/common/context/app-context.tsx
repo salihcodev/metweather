@@ -8,6 +8,7 @@ export const AppContext = createContext<any>({});
 // utils:
 import { RETRIEVE_INFO_ENDPOINT, SEARCH_ENDPOINT } from '../constants/weather-api.const';
 import { InitialFormRowType } from '../@types/initial-form-row.type';
+import getDaysWithinRange from '../utils/get-days-within-range.util';
 
 // component>>>
 
@@ -70,52 +71,62 @@ const AppProvider: FC<any> = ({ children }) => {
     const lati = formRow.coordinates.latitude;
     const long = formRow.coordinates.longitude;
     try {
-      const URI = `${RETRIEVE_INFO_ENDPOINT}?latitude=${lati}&longitude=${long}&hourly=temperature_2m,${humidity}&start_date=${formRow.dateRange.startDate}&end_date=${formRow.dateRange.endDate}`;
+      const days = getDaysWithinRange(formRow.dateRange.endDate, formRow.dateRange.startDate);
 
-      let data;
-      if (lati && long) {
-        const { status, data: _data } = await axios.get(URI);
-        data = _data;
-      }
+      if (days >= 7) {
+        alert(`The date range is invalid, It must be between 7 days ^^`);
+        setGetCitiesInfoLoading(`idle`);
+      } else {
+        // Build the URI:
+        const URI = `${RETRIEVE_INFO_ENDPOINT}?latitude=${lati}&longitude=${long}&hourly=temperature_2m,${humidity}&start_date=${formRow.dateRange.startDate}&end_date=${formRow.dateRange.endDate}`;
 
-      let store: any = [];
-      for (let i in data?.hourly.time) {
-        const time = data?.hourly.time[i];
+        let data;
+        if (lati && long) {
+          const { status, data: _data } = await axios.get(URI);
+          data = _data;
+        }
 
-        let temperature;
-        if (data?.hourly.temperature_2m !== undefined) temperature = data?.hourly.temperature_2m[i];
+        // Prepare & collect graph data:
+        let store: any = [];
+        for (let i in data?.hourly.time) {
+          const time = data?.hourly.time[i];
 
-        let humidity;
-        if (data?.hourly.relativehumidity_2m !== undefined)
-          humidity = data?.hourly.relativehumidity_2m[i];
+          let temperature;
+          if (data?.hourly.temperature_2m !== undefined)
+            temperature = data?.hourly.temperature_2m[i];
 
-        const toInject: any = {
-          time: new Date(time).toDateString(),
-          temperature: temperature || null,
-          humidity: humidity || null,
+          let humidity;
+          if (data?.hourly.relativehumidity_2m !== undefined)
+            humidity = data?.hourly.relativehumidity_2m[i];
+
+          const toInject: any = {
+            time: new Date(time).toDateString(),
+            temperature: temperature || null,
+            humidity: humidity || null,
+          };
+          store.push(toInject);
+        }
+
+        // Build final row
+        const currentRowInfo = {
+          ...formRow,
+          cityName: formRow?.cityName,
+          coordinates: {
+            latitude: data?.latitude,
+            longitude: data?.longitude,
+          },
+          hourly_units: data?.hourly_units || null,
+          data: store,
         };
-        store.push(toInject);
+
+        // Update that row even if it's not the current row, No matter where is it
+        const updatedVersionFromRow = formData.map((row: any) =>
+          row.id === formRow.id ? (row = currentRowInfo) : row,
+        );
+
+        setFormData(updatedVersionFromRow);
+        setGetCitiesInfoLoading(`idle`);
       }
-
-      // Build final row
-      const currentRowInfo = {
-        ...formRow,
-        cityName: formRow?.cityName,
-        coordinates: {
-          latitude: data?.latitude,
-          longitude: data?.longitude,
-        },
-        hourly_units: data?.hourly_units || null,
-        data: store,
-      };
-
-      // Update that row even if it's not the current row, No matter where is it
-      const updatedVersionFromRow = formData.map((row: any) =>
-        row.id === formRow.id ? (row = currentRowInfo) : row,
-      );
-
-      setFormData(updatedVersionFromRow);
-      setGetCitiesInfoLoading(`idle`);
     } catch ({
       message,
       response: {

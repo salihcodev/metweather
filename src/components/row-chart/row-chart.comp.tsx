@@ -1,6 +1,15 @@
 // pkgs:
 import { FC, useContext, useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 // utils:
 import './style.sass';
@@ -14,8 +23,11 @@ import ICityFormRow from '../../common/interfaces/city-form-row.interface';
 export const RowChart: FC<ICityFormRow> = ({ row }) => {
   const { searchOptions, getCitiesInfoLoading } = useContext(AppContext);
 
+  console.log(row);
+
   return (
     <div className="row-chart">
+      <span className="graph-title">{row?.cityName}</span>
       {getCitiesInfoLoading === `idle` ? (
         <ResponsiveContainer width="100%" height="100%">
           {row?.data !== null ? (
@@ -41,7 +53,12 @@ export const RowChart: FC<ICityFormRow> = ({ row }) => {
               ) : null}
             </LineChart>
           ) : (
-            <div className="blank">No data, Try to give it a name or coordinates ^^</div>
+            <div className="blank">
+              <p>
+                <span>No data, Try to give it a name or coordinates.</span> <br />
+                <em>And make sure the date range is between (7) days ^^</em>
+              </p>
+            </div>
           )}
         </ResponsiveContainer>
       ) : (
