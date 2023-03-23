@@ -53,7 +53,9 @@ export const ReportsTable: FC<{}> = ({}) => {
 
   // Report toggle selection:
   const toggleReportSelection = (id: string, value: boolean) => {
-    const processed = reports?.map((row: ReportsRowTypes) => (row.id === id ? { ...row, checked: value } : row));
+    const processed = reports?.map((row: ReportsRowTypes) =>
+      row.id === id ? { ...row, checked: value } : row,
+    );
 
     setReports(processed);
   };
@@ -108,7 +110,7 @@ export const ReportsTable: FC<{}> = ({}) => {
   return (
     <section className="reports-table">
       <h2>Saved Reports</h2>
-      {reports.length > 0 ? (
+      {reports?.length > 0 ? (
         <table>
           <thead>
             <tr className="table-header">
@@ -119,7 +121,9 @@ export const ReportsTable: FC<{}> = ({}) => {
                     type="checkbox"
                     id="temperature"
                     name="temperature"
-                    onClick={(e: React.FormEvent<HTMLInputElement>) => toggleAllRowsSelection(e.currentTarget.checked)}
+                    onClick={(e: React.FormEvent<HTMLInputElement>) =>
+                      toggleAllRowsSelection(e.currentTarget.checked)
+                    }
                   />
                   <button className="alt-check">
                     <span></span>
@@ -135,57 +139,71 @@ export const ReportsTable: FC<{}> = ({}) => {
               <th>Action</th>
             </tr>
           </thead>
-          {reports?.map(({ id, checked, cities, dates, issuedDate, coords, settings }: ReportsRowTypes) => {
-            // check if the element is the last element in the arr to decide whether to add separator or not.
-            const processedCoords = coords?.map((_coords: any) => `${Object.values(_coords).join(', ')}`);
+          {reports?.map(
+            ({ id, checked, cities, dates, issuedDate, coords, settings }: ReportsRowTypes) => {
+              // check if the element is the last element in the arr to decide whether to add separator or not.
+              const processedCoords = coords?.map(
+                (_coords: any) => `${Object.values(_coords).join(', ')}`,
+              );
 
-            const processedDates = dates?.map((_dates: any) => `${Object.values(_dates).join(', ')}`);
+              const processedDates = dates?.map(
+                (_dates: any) => `${Object.values(_dates).join(', ')}`,
+              );
 
-            return (
-              <tbody key={id}>
-                <tr>
-                  <td>
-                    <div className="select">
-                      <input
-                        type="checkbox"
-                        id="temperature"
-                        name="temperature"
-                        checked={checked}
-                        onClick={(e: React.FormEvent<HTMLInputElement>) =>
-                          toggleReportSelection(id, e.currentTarget.checked)
-                        }
-                      />
-                      <button className="alt-check">
-                        <span></span>
+              return (
+                <tbody key={id}>
+                  <tr>
+                    <td>
+                      <div className="select">
+                        <input
+                          type="checkbox"
+                          id="temperature"
+                          name="temperature"
+                          checked={checked}
+                          onClick={(e: React.FormEvent<HTMLInputElement>) =>
+                            toggleReportSelection(id, e.currentTarget.checked)
+                          }
+                        />
+                        <button className="alt-check">
+                          <span></span>
+                        </button>
+                        <label htmlFor="temperature"></label>
+                      </div>
+                    </td>
+                    {/* Cities */}
+                    <td>{cities.join(', ')}</td>
+
+                    {/* Coords */}
+                    <td title={processedCoords?.toString()}>
+                      {processedCoords?.toString().substring(0, 22)}...
+                    </td>
+
+                    {/* Settings */}
+                    {!settings.humidity ? (
+                      <td>Temperature Only</td>
+                    ) : (
+                      <td>Temperature, Humidity </td>
+                    )}
+
+                    {/* Date range */}
+                    <td title={processedDates?.toString()}>
+                      {processedDates?.toString().substring(0, 22)}...
+                    </td>
+
+                    <td>{issuedDate}</td>
+                    <td className="controllers">
+                      <button className="view" onClick={() => handleViewReport(id)}>
+                        <FiEye />
                       </button>
-                      <label htmlFor="temperature"></label>
-                    </div>
-                  </td>
-                  {/* Cities */}
-                  <td>{cities.join(', ')}</td>
-
-                  {/* Coords */}
-                  <td title={processedCoords?.toString()}>{processedCoords?.toString().substring(0, 22)}...</td>
-
-                  {/* Settings */}
-                  {!settings.humidity ? <td>Temperature Only</td> : <td>Temperature, Humidity </td>}
-
-                  {/* Date range */}
-                  <td title={processedDates?.toString()}>{processedDates?.toString().substring(0, 22)}...</td>
-
-                  <td>{issuedDate}</td>
-                  <td className="controllers">
-                    <button className="view" onClick={() => handleViewReport(id)}>
-                      <FiEye />
-                    </button>
-                    <button className="delete" onClick={() => handleDeleteReport(id)}>
-                      <AiOutlineDelete />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            );
-          })}
+                      <button className="delete" onClick={() => handleDeleteReport(id)}>
+                        <AiOutlineDelete />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            },
+          )}
         </table>
       ) : (
         <div className="blank">
