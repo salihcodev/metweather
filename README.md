@@ -30,25 +30,25 @@ Weather app built on top of [Open-Meteo](https://open-meteo.com/en/docs) APIs
 │   └── icon.svg
 ├── README.md
 ├── src
-│   ├── App.tsx
 │   ├── assets
 │   │
 │   ├── common
+│   │   ├── interfaces
+│   │   │
+│   │   ├── @types
+│   │   │
 │   │   ├── constants
 │   │   │
 │   │   ├── context
-│   │   │
-│   │   ├── interfaces
-│   │   │
-│   │   ├── style
 │   │   │  
-│   │   ├── @types
+│   │   ├── style
 │   │   │
 │   │   └── utils
 │   │
 │   ├── components
 │   ├── views
 │   │
+│   ├── App.tsx
 │   ├── main.tsx
 │   │
 │   └── vite-env.d.ts
@@ -67,7 +67,8 @@ First:
 > pnpm install
 ```
 
-[pnpm](https://pnpm.io/installation) has to be installed in your machine
+[pnpm](https://pnpm.io/installation) has to be installed
+in your machine or simply you can go with `yarn` or `npm`
 
 Second:
 

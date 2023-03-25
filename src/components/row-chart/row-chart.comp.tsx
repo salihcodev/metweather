@@ -23,8 +23,6 @@ import ICityFormRow from '../../common/interfaces/city-form-row.interface';
 export const RowChart: FC<ICityFormRow> = ({ row }) => {
   const { searchOptions, getCitiesInfoLoading } = useContext(AppContext);
 
-  console.log(row);
-
   return (
     <div className="row-chart">
       <span className="graph-title">{row?.cityName}</span>

@@ -3,6 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineEdit } from 'react-icons/ai';
 import { RiCheckboxMultipleFill } from 'react-icons/ri';
 
 // utils:
@@ -19,20 +20,16 @@ export const ReportsTable: FC<{}> = ({}) => {
 
   const masterSelect = useRef<HTMLInputElement>(null);
 
+  // Get reports form local:
   useEffect(() => {
     const localReports = localStorage.getItem(`searchHistory`)!;
     const parsed = JSON.parse(localReports);
 
-    const processed = parsed?.map((row: ReportsRowTypes) => {
-      return { ...row, checked: false };
-    });
-
-    setReports(processed);
+    setReports(parsed);
 
     return () => {};
   }, []);
 
-  // Report selection:
   const toggleAllRowsSelection = (checked: boolean) => {
     const processed = reports?.map((row: ReportsRowTypes) => {
       return { ...row, checked: checked };
@@ -41,7 +38,6 @@ export const ReportsTable: FC<{}> = ({}) => {
     setReports(processed);
   };
 
-  // Report invert selection:
   const invertSelection = () => {
     const processed = reports?.map((row: ReportsRowTypes) => {
       return { ...row, checked: !row.checked };
@@ -51,7 +47,6 @@ export const ReportsTable: FC<{}> = ({}) => {
     setReports(processed);
   };
 
-  // Report toggle selection:
   const toggleReportSelection = (id: string, value: boolean) => {
     const processed = reports?.map((row: ReportsRowTypes) =>
       row.id === id ? { ...row, checked: value } : row,
@@ -72,7 +67,6 @@ export const ReportsTable: FC<{}> = ({}) => {
     setIsMultiple(decision);
   }, [reports]);
 
-  // Delete selected:
   const handleDeleteSelected = () => {
     const ans = prompt(`You're about to delete all history... Are you sure? If you are type "yes"`);
 
@@ -87,7 +81,6 @@ export const ReportsTable: FC<{}> = ({}) => {
     }
   };
 
-  // Delete row:
   const handleDeleteReport = (id: string) => {
     const ans = prompt(`You're about to delete all history... Are you sure? If you are type "yes"`);
 
@@ -102,9 +95,12 @@ export const ReportsTable: FC<{}> = ({}) => {
     }
   };
 
-  // View report
   const handleViewReport = (id: string) => {
     history(`/?src=${id}`);
+  };
+
+  const handleEditReport = (id: string) => {
+    history(`/?src=${id}&edit=true`);
   };
 
   return (
@@ -141,7 +137,7 @@ export const ReportsTable: FC<{}> = ({}) => {
           </thead>
           {reports?.map(
             ({ id, checked, cities, dates, issuedDate, coords, settings }: ReportsRowTypes) => {
-              // check if the element is the last element in the arr to decide whether to add separator or not.
+              // Get it clean:
               const processedCoords = coords?.map(
                 (_coords: any) => `${Object.values(_coords).join(', ')}`,
               );
@@ -194,6 +190,9 @@ export const ReportsTable: FC<{}> = ({}) => {
                     <td className="controllers">
                       <button className="view" onClick={() => handleViewReport(id)}>
                         <FiEye />
+                      </button>
+                      <button className="edit" onClick={() => handleEditReport(id)}>
+                        <AiOutlineEdit />
                       </button>
                       <button className="delete" onClick={() => handleDeleteReport(id)}>
                         <AiOutlineDelete />

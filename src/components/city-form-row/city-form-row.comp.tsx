@@ -16,7 +16,8 @@ export const CityFormRow: FC<ICityFormRow> = ({ row }) => {
   const [formRow, setFormRow] = useState<InitialFormRowType>(row);
   const [citiesMatchesSearch, setCitiesMatchesSearch] = useState<CitiesSearchListItemType[]>([]);
 
-  const { formData, setFormData, handleSearchInCities, getCityInfoOnPick, searchOptions } = useContext(AppContext);
+  const { formData, setFormData, handleSearchInCities, getCityInfoOnPick, searchOptions } =
+    useContext(AppContext);
 
   // Update the form content:
   useEffect(() => {
